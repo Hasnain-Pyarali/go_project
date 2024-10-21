@@ -1,5 +1,8 @@
 package main
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	var confName = "Go Conference"
@@ -16,19 +19,43 @@ func main() {
 	var email string
 	var userTickets uint
 
-	fmt.Println("Enter youre first name:")
-	fmt.Scan(&firstName)
-	fmt.Println("Enter youre last name:")
-	fmt.Scan(&lastName)
-	fmt.Println("Enter youre email adress:")
-	fmt.Scan(&email)
-	fmt.Println("Enter number of tickets:")
-	fmt.Scan(&userTickets)
+	for {
+		fmt.Println("Enter youre first name:")
+		fmt.Scan(&firstName)
+		fmt.Println("Enter youre last name:")
+		fmt.Scan(&lastName)
+		fmt.Println("Enter youre email adress:")
+		fmt.Scan(&email)
+		fmt.Println("Enter number of tickets:")
+		fmt.Scan(&userTickets)
 
-	remainingTickets -= userTickets
-	bookings = append(bookings, firstName + " " + lastName)
+		isValidName := len(firstName) >= 2 && len(firstName) >= 2
+		isValidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 
-	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
-	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, confName)
-	fmt.Printf("These are all of our bookings %v\n", bookings)
+		if isValidName && isValidEmail && isValidTicketNumber {
+			remainingTickets -= userTickets
+			bookings = append(bookings, firstName + " " + lastName)
+	
+			firstNames := []string{}
+	
+			for _, booking := range bookings {
+				firstNames = append(firstNames, strings.Fields(booking)[0])
+			}
+			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, confName)
+			fmt.Printf("These are all of our bookings %v\n", firstNames)
+		} else {
+			if !isValidName {
+				fmt.Println("Youre name or lastname is not valid")
+			}
+			if !isValidEmail {
+				fmt.Println("Youre email is invalid")
+			}
+			if !isValidTicketNumber {
+				fmt.Println("Number of tickets that you entered is not valid")
+			}
+		}
+	}
+
 }
